@@ -26,6 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # 🔴 Fail early if secrets are missing
+      - name: Validate MongoDB secrets
+        run: |
+          if [ -z "${{ secrets.MONGODB_USERNAME }}" ] || [ -z "${{ secrets.MONGODB_PASSWORD }}" ]; then
+            echo "❌ Missing MongoDB credentials"
+            exit 1
+          fi
+
       - name: Run server
         env:
           MONGODB_CLUSTER_ADDRESS: cluster0.bzacnaf.mongodb.net
